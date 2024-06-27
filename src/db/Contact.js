@@ -27,6 +27,6 @@ const contactSchema = new Schema({
 { timestamps: true }
 );
 
-const Contact = model("contact", contactSchema);
+const Contact = model("contacts", contactSchema);
 
 export default Contact;
