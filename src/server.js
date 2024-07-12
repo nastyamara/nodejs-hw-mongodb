@@ -21,7 +21,8 @@ const setupServer = () => {
     }
 })
     app.use(logger);
-    app.use(cors());
+  app.use(cors());
+  app.use(express.json());
 
       app.get('/', (req, res) => {
     res.json({
