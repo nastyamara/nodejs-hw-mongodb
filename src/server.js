@@ -4,7 +4,8 @@ import pino from 'pino-http';
 import dotenv from "dotenv";
 import env from "./utils/env.js";
 import contactsRouter from './routers/contacts.js';
-import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import notFoundHandler from './middlewares/notFoundHandler.js';
+import errorHandler from './middlewares/errorHandler.js';
 
 
 
@@ -27,9 +28,10 @@ const setupServer = () => {
       message: 'Hello, world!!!',
     });
       });
-    app.use('/contacts', contactsRouter);
+    app.use(contactsRouter);
 
-    app.use(notFoundHandler);
+  app.use(notFoundHandler);
+  app.use(errorHandler);
 
 
     app.listen(3000, ()=> console.log(`Server running on ${PORT} PORT`))
