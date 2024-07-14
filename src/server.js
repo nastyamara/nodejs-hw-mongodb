@@ -4,8 +4,8 @@ import pino from 'pino-http';
 import dotenv from "dotenv";
 import env from "./utils/env.js";
 import contactsRouter from './routers/contacts.js';
-import notFoundHandler from './middlewares/notFoundHandler.js';
-import errorHandler from './middlewares/errorHandler.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { errorHandler } from "./middlewares/errorHandler.js";
 
 
 
@@ -31,7 +31,7 @@ const setupServer = () => {
       });
     app.use(contactsRouter);
 
-  app.use(notFoundHandler);
+  app.use('*', notFoundHandler);
   app.use(errorHandler);
 
 
