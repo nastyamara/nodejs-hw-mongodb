@@ -50,7 +50,7 @@ export const updateContactController = async (req, res, next) => {
 
             if (!result) {
                 throw createHttpError(404, "Contact not found");
-                
+                return;
          }
 
     res.json({
