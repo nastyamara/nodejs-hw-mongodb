@@ -4,11 +4,11 @@ import { calcPaginationData } from "../utils/calcPaginationData.js";
 
 export const getContacts = async ({ page = 1, perPage = 10, sortBy = fieldList[0], sortOrder = sortOrderList[0] }) => {
   const skip = (page - 1) * perPage; 
-  const items = await Contact.find().skip(skip).limit(perPage).sort({ [sortBy]: sortOrder });
+  const data = await Contact.find().skip(skip).limit(perPage).sort({ [sortBy]: sortOrder });
   const totalItems = await Contact.countDocuments();
   const {totalPages, hasNextPage, hasPreviousPage} = calcPaginationData({total: totalItems, page, perPage})
   return {
-    items,
+    data,
     page,
     perPage,
     totalItems,
