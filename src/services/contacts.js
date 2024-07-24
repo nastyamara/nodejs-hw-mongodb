@@ -30,15 +30,10 @@ export const addContact = async (payload) => {
 export const updateContact = async (contactId, data, options = {}) => {
 
   const result = await Contact.findOneAndUpdate(contactId , data, { new: true, includeResultMetadata: true, ...options});
-  if (!result) return null;
-    // throw createHttpError(400, "Contact not found")
-  
-
+  if (!result||!result.value) return null;
   return result;
-  // {
-  //   contact: result.value,
-  //   isNew: Boolean(result?.lastErrorObject?.upserted),
-  // };
+    // isNew: Boolean(result?.lastErrorObject?.upserted),
+  
 }
 
 export const deleteContact = filter => Contact.findOneAndDelete(filter);
