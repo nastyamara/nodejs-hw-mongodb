@@ -1,12 +1,15 @@
 import createHttpError from "http-errors";
 import { fieldList, sortOrderList } from "../constants/contacts.js";
-import Contact from "../db/Contact.js";
+import Contact from "../db/models/Contact.js";
 import { calcPaginationData } from "../utils/calcPaginationData.js";
 
-export const getContacts = async ({ page = 1, perPage = 10, sortBy = fieldList[0], sortOrder = sortOrderList[0] }) => {
+export const getContacts = async ({ page = 1, perPage = 10, sortBy = fieldList[0], sortOrder = sortOrderList[0], filter = {}}) => {
   const skip = (page - 1) * perPage; 
-  const data = await Contact.find().skip(skip).limit(perPage).sort({ [sortBy]: sortOrder });
-  const totalItems = await Contact.countDocuments();
+  const userQuery = Contact.find({ userId: filter })
+  const totalItems = await Contact.find({ userId: filter }).countDocuments();
+  const data = await userQuery.skip(skip).limit(perPage).sort({ [sortBy]: sortOrder });
+   
+
   const {totalPages, hasNextPage, hasPreviousPage} = calcPaginationData({total: totalItems, page, perPage})
   return {
     data,
@@ -20,7 +23,7 @@ export const getContacts = async ({ page = 1, perPage = 10, sortBy = fieldList[0
   }
 };
 
-export const getContactById = (contactId) => Contact.findById(contactId);
+export const getContactById = filter => Contact.findOne(filter);
 
 export const addContact = async (payload) => {
     const contact = Contact.create(payload);
