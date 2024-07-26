@@ -3,6 +3,10 @@ import createHttpError from 'http-errors';
 import { contactAddSchema } from '../validation/contactsValidationSchema.js';
 import parsePafinationParams from '../utils/parsePaginationParams.js';
 import parseSortParams from '../utils/parseSortParams.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { env } from '../utils/env.js';
+
 
 export const getAllContactsController = async (req, res, next) => {
     const { _id: userId } = req.user;
@@ -37,8 +41,19 @@ const contact = await getContactById({_id: id, userId});
     };
 
 export const createContactController = async (req, res) => {
+  let photoUrl;
+  const photo = req.file;
+
+  if (photo) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+
     const {_id: userId}  = req.user;
-    const data = await addContact({ ...req.body, userId });
+    const data = await addContact({ ...req.body, userId, photo: photoUrl });
    
 
     res.status(201).json({
@@ -49,17 +64,26 @@ export const createContactController = async (req, res) => {
 };
 
 export const updateContactController = async (req, res, next) => {
+let photoUrl;
+  const photo = req.file;
+
+  if (photo) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+
     const { id } = req.params;
     const {_id: userId}  = req.user;
-    const result = await updateContact({ _id: id, userId }, req.body);
+    const result = await updateContact({ _id: id, userId }, {...req.body, photo: photoUrl });
     console.log(result);
 
     if (!result) {
         throw createHttpError(404, "Contact not found");
-        return;
+       
     }
-              
-         
 
     res.json({
         status: 200,
