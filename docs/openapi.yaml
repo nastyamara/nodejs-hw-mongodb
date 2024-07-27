@@ -7,7 +7,6 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   description: Documentation of Contacts App
 tags:
-  # теги, що ви будете використовувати
   - name: Contacts
     description: Operations about contacts.
   - name: Auth
@@ -16,7 +15,6 @@ servers:
   - url: http://localhost:3000
   - url: https://contacts-app-fpaf.onrender.com
 paths:
-  # тут будуть посилання на ендпоінти
   /contacts:
     get:
       $ref: ../swagger/paths/contacts/get.yaml
